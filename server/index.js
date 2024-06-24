@@ -115,6 +115,7 @@ const app = express();
 const port = 5000;
 
 app.use(cors());
+app.use(express.json()); // for parsing application/json
 
 app.get('/auth/login', login);
 app.get('/auth/callback', callback);

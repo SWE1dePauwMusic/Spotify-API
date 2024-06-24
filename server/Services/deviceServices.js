@@ -2,7 +2,7 @@
 //Get device from Spotify API
 const request = require('request')
 
-function getDevice(accessToken) {
+function getDevice(accessToken, deviceName) {
     const options = {
         url: 'https://api.spotify.com/v1/me/player/devices',
         headers: {
@@ -20,7 +20,7 @@ function getDevice(accessToken) {
                 console.log(data);
                 if (data.devices && data.devices.length > 0) {
                     for (let i = 0; i < data.devices.length; i++) {
-                        if (data.devices[i].name == 'Huy music web') {
+                        if (data.devices[i].name === deviceName) {
                             resolve(data.devices[i].id);
                             break
                         }
@@ -37,10 +37,11 @@ function getDevice(accessToken) {
 
 
 
-async function switchDevice(accessToken) {
+async function switchDevice(accessToken, deviceName) {
     try {
         // Wait for the device ID to be returned
-        let deviceId = await getDevice(accessToken);
+
+        let deviceId = await getDevice(accessToken, deviceName);
         console.log("Device ID:", deviceId);
 
         // Define options for switching playback
@@ -73,7 +74,7 @@ async function switchDevice(accessToken) {
 
     } catch (error) {
         console.error("Error getting device ID:", error);
-
+        return Promise.reject("no device " +  error);
     }
 }
 

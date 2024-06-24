@@ -1,4 +1,5 @@
 const {getDevice, switchDevice} = require("../Services/deviceServices");
+const {json} = require("express");
 
 
 const getDeviceHandler = async (req, res) => {
@@ -16,12 +17,13 @@ const getDeviceHandler = async (req, res) => {
 const switchDeviceHandler = async (req, res) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
-        console.log("received token: ", accessToken);
+        const deviceName = req.body.deviceName;
+        console.log("device Name request: ", deviceName);
         console.log("start switching device");
-        const message = await switchDevice(accessToken);
-        res.status(200).send(message);
+        const message = await switchDevice(accessToken, deviceName);
+        res.status(200).json({ message: message });
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).json({ error: error.message });
     }
 };
 
