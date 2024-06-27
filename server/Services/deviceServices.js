@@ -9,7 +9,6 @@ function getDevice(accessToken, deviceName) {
             'Authorization': 'Bearer ' + accessToken
         }
     };
-
     return new Promise((resolve, reject) => {
         request.get(options, (error, response, body) => {
             if (error) {
@@ -22,13 +21,12 @@ function getDevice(accessToken, deviceName) {
                     for (let i = 0; i < data.devices.length; i++) {
                         if (data.devices[i].name === deviceName) {
                             resolve(data.devices[i].id);
-                            break
                         }
                     }
-                } else {
-                    reject(new Error('No devices found'));
-                }
-            } catch (error) {
+                    }
+                reject(new Error('No devices: ' + deviceName + 'found'))
+            }
+            catch (error) {
                 reject(error);
             }
         });
@@ -36,11 +34,9 @@ function getDevice(accessToken, deviceName) {
 }
 
 
-
 async function switchDevice(accessToken, deviceName) {
     try {
         // Wait for the device ID to be returned
-
         let deviceId = await getDevice(accessToken, deviceName);
         console.log("Device ID:", deviceId);
 
@@ -59,7 +55,7 @@ async function switchDevice(accessToken, deviceName) {
         };
 
         // Make the request to switch playback
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {               //Send request
             request.put(switchPlaybackOptions, function(err, resp, body) {
                 if (!err && resp.statusCode === 204) {
                     console.log("Playback switched successfully");

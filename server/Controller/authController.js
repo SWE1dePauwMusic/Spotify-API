@@ -20,7 +20,7 @@ const generateRandomString = (length) => {
 global.access_token = '';
 
 const login = (req, res) => {
-    const scope = "streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state";
+    const scope = "streaming user-read-email user-top-read user-read-private user-read-playback-state user-modify-playback-state playlist-read-private";
     const state = generateRandomString(16);
 
     const auth_query_parameters = new URLSearchParams({
@@ -67,20 +67,6 @@ const getToken = (req, res) => {
     });
     console.log("AccessToken", global.access_token);
 };
-
-// const getDeviceHandler = (req, res) => {
-//     const accessToken = req.headers.authorization.split(' ')[1];
-//     getDevice(accessToken)
-//         // .then(devices => res.json(devices))
-//         // .catch(error => res.status(500).send(error.message));
-// };
-//
-// const switchDeviceHandler = (req, res) => {
-//     const accessToken = req.headers.authorization.split(' ')[1];
-//     switchDevice(accessToken)
-//         // .then(response => res.status(200).send(response))
-//         // .catch(error => res.status(500).send(error.message));
-// };
 
 module.exports = {
     login,

@@ -8,6 +8,8 @@ const getDeviceHandler = async (req, res) => {
         console.log("received token: ",  accessToken)
         console.log("start getting deviceId")
         const deviceId = await getDevice(accessToken);
+
+
         res.json({ deviceId });
     } catch (error) {
         res.status(500).send(error.message);
