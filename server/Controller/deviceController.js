@@ -1,18 +1,18 @@
 const {getDevice, switchDevice} = require("../Services/deviceServices");
 const {json} = require("express");
+const makeResponse = require("../Utils/response");
 
 
 const getDeviceHandler = async (req, res) => {
     try {
-        const accessToken = req.headers.authorization.split(' ')[1];
+        const accessToken = req.headers.authorization.split(' ')[1];        //Should we need to check whether you have token or not??
         console.log("received token: ",  accessToken)
         console.log("start getting deviceId")
         const deviceId = await getDevice(accessToken);
 
-
-        res.json({ deviceId });
+        makeResponse(res, 200, { deviceId: deviceId })
     } catch (error) {
-        res.status(500).send(error.message);
+        makeResponse(res, error.statusCode || 500, null, error.message);
     }
 };
 
@@ -23,9 +23,9 @@ const switchDeviceHandler = async (req, res) => {
         console.log("device Name request: ", deviceName);
         console.log("start switching device");
         const message = await switchDevice(accessToken, deviceName);
-        res.status(200).json({ message: message });
+        makeResponse(res, 200, { message: message });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        makeResponse(res, error.statusCode || 500, null, error.message);
     }
 };
 

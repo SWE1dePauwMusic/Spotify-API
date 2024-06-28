@@ -1,5 +1,5 @@
 
-const {callback, getToken, login} = require("./Controller/authController");
+const {callback, getToken, login, refreshAccessToken} = require("./Controller/authController");
 const {getDeviceHandler, switchDeviceHandler} = require("./Controller/deviceController");
 const express = require('express');
 const dotenv = require('dotenv');
@@ -19,6 +19,8 @@ app.use(express.json()); // for parsing application/json
 app.get('/auth/login', login);
 app.get('/auth/callback', callback);
 app.get('/auth/token', getToken);
+app.post('/auth/refreshToken', refreshAccessToken);
+
 app.get('/auth/getDevice', getDeviceHandler);
 app.put('/auth/switchDevice', switchDeviceHandler);
 

@@ -1,6 +1,7 @@
 const {getTopArtistsOnSpotify, getTopTracksOnSpotify, getUserInfo, getUserPlaylists, getPlaylist, deletePlaylist,
     createPlaylist, updatePlaylistDetails
 } = require("../Services/userInfoService");
+const makeResponse = require("../Utils/response");
 
 
 
@@ -10,10 +11,9 @@ const getTopArtistsHandler = async (req, res) => {
         console.log("Start fetching top artists");
 
         const topArtists = await getTopArtistsOnSpotify(accessToken);
-
-        res.status(200).json({ topArtists });
+        makeResponse(res, 200, { topArtists });
     } catch (error) {
-        res.status(error.statusCode || 500).json({ error: error.message });
+        makeResponse(res, error.statusCode || 500, null, error.message);
     }
 };
 
@@ -23,10 +23,9 @@ const getTopTracksHandler = async (req, res) => {
         console.log("Start fetching top tracks");
 
         const topTracks = await getTopTracksOnSpotify(accessToken);
-
-        res.status(200).json({ topTracks });
+        makeResponse(res, 200, { topTracks })
     } catch (error) {
-        res.status(error.statusCode || 500).json({ error: error.message });
+        makeResponse(res, error.statusCode || 500, null, error.message);
     }
 };
 
@@ -36,10 +35,9 @@ const getUserInfoHandler = async (req, res) => {
         console.log("Start fetching user info");
 
         const userInfo = await getUserInfo(accessToken);
-
-        res.status(200).json({ userInfo });
+        makeResponse(res, 200, { userInfo })
     } catch (error) {
-        res.status(error.statusCode || 500).json({ error: error.message });
+        makeResponse(res, error.statusCode || 500, null, error.message);
     }
 };
 
@@ -49,10 +47,9 @@ const getUserPlaylistsHandler = async (req, res) => {
         console.log("Start fetching user playlists");
 
         const userPlaylists = await getUserPlaylists(accessToken);
-
-        res.status(200).json({ userPlaylists });
+        makeResponse(res, 200, { userPlaylists })
     } catch (error) {
-        res.status(error.statusCode || 500).json({ error: error.message });
+        makeResponse(res, error.statusCode || 500, null, error.message);
     }
 };
 
@@ -63,11 +60,15 @@ const getPlaylistHandler = async (req, res) => {
 
         console.log("Start fetching playlist", playlistId);
 
-        const playlist = await getPlaylist(accessToken, playlistId);
-        console.log(playlist.name, playlist.tracks.items.length)
-        res.status(200).json({ name: playlist.name, length: playlist.tracks.items.length });
+        const result = await getPlaylist(accessToken, playlistId);
+        const playlistInfo = {
+            name: result.name,
+            length: result.tracks.items.length
+        }
+        console.log(playlistInfo)
+        makeResponse(res, 200, { playlistInfo });
     } catch (error) {
-        res.status(error.statusCode || 500).json({ error: error.message });
+        makeResponse(res, error.statusCode || 500, null, error.message);
     }
 
 }
@@ -80,9 +81,9 @@ const createPlaylistHandler = async (req, res) => {
 
         const newPlaylist = await createPlaylist(accessToken, userId, playlistName);
 
-        res.status(201).json({ newPlaylist });
+        makeResponse(res, 201, { newPlaylist })
     } catch (error) {
-        res.status(error.statusCode || 500).json({ error: error.message });
+        makeResponse(res, error.statusCode || 500, null, error.message)
     }
 };
 
@@ -95,9 +96,9 @@ const updatePlaylistDetailsHandler = async (req, res) => {
 
         const updatedPlaylist = await updatePlaylistDetails(accessToken, playlistId, details);
 
-        res.status(200).json({ updatedPlaylist });
+        makeResponse(res, 200, { updatedPlaylist })
     } catch (error) {
-        res.status(error.statusCode || 500).json({ error: error.message });
+        makeResponse(res, error.statusCode || 500, null, error.message)
     }
 };
 
@@ -109,9 +110,9 @@ const deletePlaylistHandler = async (req, res) => {
 
         await deletePlaylist(accessToken, playlistId);
 
-        res.status(204).send();
+        makeResponse(res, 204, null);
     } catch (error) {
-        res.status(error.statusCode || 500).json({ error: error.message });
+        makeResponse(res, error.statusCode || 500, null, error.message);
     }
 };
 

@@ -1,4 +1,4 @@
-const makeRequest = require("../Config/request");
+const makeRequest = require("../Utils/request");
 const SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1';
 
 const getTopArtistsOnSpotify = async (accessToken) => {
@@ -35,7 +35,7 @@ const getTopArtistsOnSpotify = async (accessToken) => {
 
 const getTopTracksOnSpotify = async (accessToken) => {
     const params = {
-        limit: 10,
+        limit: 1,
         time_range: 'short_term' // 4 weeks
     };
     const options = {
@@ -55,6 +55,17 @@ const getTopTracksOnSpotify = async (accessToken) => {
             popularity: track.popularity,
             id: track.id,
             artists: track.artists.map(artist => artist.name),
+            images: track.album.images.map(
+                image => {
+                    return {
+                        url: image.url,
+                        height: image.height,
+                        width: image.width
+                    }
+                }
+            ),
+            duration: track.duration_ms,
+
         }));
         console.log('Top tracks:', tracks);
         return tracks;
