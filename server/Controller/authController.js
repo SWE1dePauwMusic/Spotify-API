@@ -31,6 +31,7 @@ const callback = async (req, res) => {
 
 const getToken = (req, res) => {
     console.log("AccessToken", accessToken);
+    console.log("RefreshToken", refreshToken);
     const authTokenData = {
         access_token: accessToken,
         refresh_token: refreshToken,
