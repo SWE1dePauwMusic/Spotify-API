@@ -33,7 +33,7 @@ app.get('/top-tracks', getTopTracksHandler);
 //User-info
 app.get('/user-info', getUserInfoHandler);
 app.get('/user-playlists', getUserPlaylistsHandler);
-app.get('/get-playlist/', getPlaylistHandler)
+app.get('/get-playlist', getPlaylistHandler)
 
 
 app.listen(port, () => {

@@ -58,14 +58,10 @@ const getPlaylistHandler = async (req, res) => {
         const accessToken = req.headers.authorization.split(' ')[1];
         const { playlistId } = req.query;
 
-        console.log("Start fetching playlist", playlistId);
+        console.log("Start fetching playlist_sample.json", playlistId);
 
-        const result = await getPlaylist(accessToken, playlistId);
-        const playlistInfo = {
-            name: result.name,
-            length: result.tracks.items.length
-        }
-        console.log(playlistInfo)
+        const playlistInfo = await getPlaylist(accessToken, playlistId);
+
         makeResponse(res, 200, { playlistInfo });
     } catch (error) {
         makeResponse(res, error.statusCode || 500, null, error.message);
@@ -77,7 +73,7 @@ const createPlaylistHandler = async (req, res) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
         const { userId, playlistName } = req.body;
-        console.log("Start creating playlist");
+        console.log("Start creating playlist_sample.json");
 
         const newPlaylist = await createPlaylist(accessToken, userId, playlistName);
 
@@ -92,7 +88,7 @@ const updatePlaylistDetailsHandler = async (req, res) => {
         const accessToken = req.headers.authorization.split(' ')[1];
         const { playlistId } = req.params;
         const details = req.body;
-        console.log("Start updating playlist details");
+        console.log("Start updating playlist_sample.json details");
 
         const updatedPlaylist = await updatePlaylistDetails(accessToken, playlistId, details);
 
@@ -106,7 +102,7 @@ const deletePlaylistHandler = async (req, res) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
         const { playlistId } = req.params;
-        console.log("Start deleting playlist");
+        console.log("Start deleting playlist_sample.json");
 
         await deletePlaylist(accessToken, playlistId);
 

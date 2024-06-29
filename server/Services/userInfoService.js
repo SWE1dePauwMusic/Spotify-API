@@ -110,9 +110,11 @@ const getUserPlaylists = async (accessToken) => {
         const playlists = items.map(playlist => ({
             name: playlist.name,
             id: playlist.id,
-            tracks: playlist.tracks.total,
+            images: playlist.images,
+            trackNumber: playlist.tracks.total,
             links: playlist.tracks.href,
         }));
+        console.log(playlistsData)
         return playlists;
     } catch (error) {
         console.error('Error fetching user playlists:', error);
@@ -128,8 +130,30 @@ const getPlaylist = async (accessToken, playlistId) => {
             'Authorization': `Bearer ${accessToken}`
         }
     };
-    return makeRequest(options);
+    try {
+        const result = await makeRequest(options)
+        console.log(result)
+        const playlistInfo = {
+            name: result.name,
+            length: result.tracks.items.length,
+            images: result.images,
+            id: result.id,
+            link: result.tracks.href,
+            trackList: result.tracks.items.map(track => ({
+                name: track.track.name,
+                artists: track.track.artists.map(artist => artist.name),
+                duration: track.track.duration_ms,
+                id: track.track.id,
+                images: track.track.album.images,
+            }))
 
+        }
+        console.log(playlistInfo)
+        return playlistInfo
+    } catch (error) {
+        console.error('Error fetching playlist_sample.json with Id:', error);
+        throw error;
+    }
 }
 
 const createPlaylist = async (accessToken, userId, playlistName) => {
