@@ -1,6 +1,6 @@
-const { getAuthUrl, getAccessToken } = require('../services/authService');
+
 const makeResponse = require("../Utils/response");
-const {getRefreshAccessToken} = require("../Services/authService"); // Adjust the path to where your authService file is located
+const {getAuthUrl, getAccessToken, getRefreshAccessToken} = require("../Services/authService");
 
 let accessToken = '';
 let refreshToken = '';
