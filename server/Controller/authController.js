@@ -52,6 +52,7 @@ const refreshAccessToken = async (req, res) => {
         const newAccessToken = data.access_token;
         accessToken = newAccessToken;
         console.log('newAccessToken', newAccessToken)
+        console.log('test');
         makeResponse(res, 200, { access_token: newAccessToken });
     } catch (error) {
         makeResponse(res, error.statusCode || 500, null, error.message);
