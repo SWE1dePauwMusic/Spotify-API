@@ -20,10 +20,11 @@ const getTopArtistsHandler = async (req, res) => {
 const getTopTracksHandler = async (req, res) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
-        console.log("Start fetching top tracks");
+        const limit = req.query.limit;
+        console.log("Start fetching top tracks", limit);
 
-        const topTracks = await getTopTracksOnSpotify(accessToken);
-        makeResponse(res, 200, { topTracks })
+        const playlistInfo = await getTopTracksOnSpotify(accessToken, limit);
+        makeResponse(res, 200, { playlistInfo })
     } catch (error) {
         makeResponse(res, error.statusCode || 500, null, error.message);
     }
@@ -62,12 +63,12 @@ const getPlaylistHandler = async (req, res) => {
 
         const playlistInfo = await getPlaylist(accessToken, playlistId);
 
-        makeResponse(res, 200, { playlistInfo });
+        makeResponse(res, 200, {playlistInfo});
     } catch (error) {
         makeResponse(res, error.statusCode || 500, null, error.message);
     }
-
 }
+
 
 const createPlaylistHandler = async (req, res) => {
     try {

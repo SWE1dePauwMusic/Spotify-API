@@ -1,4 +1,6 @@
 const makeRequest = require("../Utils/request");
+const PlaylistInfo = require("../Models/ResponseModels/RequestPlaylistModel");
+const ArtistInfo = require("../Models/ResponseModels/RequestArtistModel");
 const SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1';
 
 const getTopArtistsOnSpotify = async (accessToken) => {
@@ -19,13 +21,7 @@ const getTopArtistsOnSpotify = async (accessToken) => {
     try {
         const result = await makeRequest(options);
         // Get only the name, popularity, id, and genres of the artist
-        const artists = result.items.map(artist => ({
-            name: artist.name,
-            popularity: artist.popularity,
-            id: artist.id,
-            genres: artist.genres,
-        }));
-        console.log('Top artists:', artists);
+        const artists = new ArtistInfo(result)
         return artists;
     } catch (error) {
         console.error('Error fetching top artists:', error);
@@ -33,9 +29,9 @@ const getTopArtistsOnSpotify = async (accessToken) => {
     }
 };
 
-const getTopTracksOnSpotify = async (accessToken) => {
+const getTopTracksOnSpotify = async (accessToken, limit) => {
     const params = {
-        limit: 1,
+        limit: limit,
         time_range: 'short_term' // 4 weeks
     };
     const options = {
@@ -50,24 +46,7 @@ const getTopTracksOnSpotify = async (accessToken) => {
     try {
         const result = await makeRequest(options);
         // Get only the name, popularity, id, and artists of the track
-        const tracks = result.items.map(track => ({
-            name: track.name,
-            popularity: track.popularity,
-            id: track.id,
-            artists: track.artists.map(artist => artist.name),
-            images: track.album.images.map(
-                image => {
-                    return {
-                        url: image.url,
-                        height: image.height,
-                        width: image.width
-                    }
-                }
-            ),
-            duration: track.duration_ms,
-
-        }));
-        console.log('Top tracks:', tracks);
+        const tracks = new PlaylistInfo(result, 'top-tracks')
         return tracks;
     } catch (error) {
         console.error('Error fetching top tracks:', error);
@@ -133,22 +112,7 @@ const getPlaylist = async (accessToken, playlistId) => {
     try {
         const result = await makeRequest(options)
         console.log(result)
-        const playlistInfo = {
-            name: result.name,
-            length: result.tracks.items.length,
-            images: result.images,
-            id: result.id,
-            link: result.tracks.href,
-            trackList: result.tracks.items.map(track => ({
-                name: track.track.name,
-                artists: track.track.artists.map(artist => artist.name),
-                duration: track.track.duration_ms,
-                id: track.track.id,
-                images: track.track.album.images,
-            }))
-
-        }
-        console.log(playlistInfo)
+        const playlistInfo = new PlaylistInfo(result, 'id')
         return playlistInfo
     } catch (error) {
         console.error('Error fetching playlist_sample.json with Id:', error);
@@ -172,6 +136,7 @@ const createPlaylist = async (accessToken, userId, playlistName) => {
     return makeRequest(options);
 };
 
+
 const updatePlaylistDetails = async (accessToken, playlistId, details) => {
     const options = {
         method: 'PUT',
@@ -182,7 +147,6 @@ const updatePlaylistDetails = async (accessToken, playlistId, details) => {
         },
         data: details
     };
-
     return makeRequest(options);
 };
 

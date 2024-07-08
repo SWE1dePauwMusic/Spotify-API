@@ -19,6 +19,7 @@ const callback = async (req, res) => {
         }
 
         const data = await getAccessToken(code);
+
         accessToken = data.access_token;
         refreshToken = data.refresh_token;
         expiresIn = data.expires_in;

@@ -22,8 +22,8 @@ const switchDeviceHandler = async (req, res) => {
         const deviceName = req.body.deviceName;
         console.log("device Name request: ", deviceName);
         console.log("start switching device");
-        const message = await switchDevice(accessToken, deviceName);
-        makeResponse(res, 200, { message: message });
+        const result = await switchDevice(accessToken, deviceName);
+        makeResponse(res, 200, result);
     } catch (error) {
         makeResponse(res, error.statusCode || 500, null, error.message);
     }
