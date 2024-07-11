@@ -10,6 +10,7 @@ async function getDevice(accessToken, deviceName) {
             'Authorization': 'Bearer ' + accessToken
         }
     };
+
     try {
         const data = await makeRequest(options);
         if (data && data.devices && data.devices.length > 0) {

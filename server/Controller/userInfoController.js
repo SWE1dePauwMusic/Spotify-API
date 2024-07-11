@@ -4,7 +4,6 @@ const {getTopArtistsOnSpotify, getTopTracksOnSpotify, getUserInfo, getUserPlayli
 const makeResponse = require("../Utils/response");
 
 
-
 const getTopArtistsHandler = async (req, res) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
@@ -21,9 +20,10 @@ const getTopTracksHandler = async (req, res) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
         const limit = req.query.limit;
+        const time_range = req.query.time_range;
         console.log("Start fetching top tracks", limit);
 
-        const playlistInfo = await getTopTracksOnSpotify(accessToken, limit);
+        const playlistInfo = await getTopTracksOnSpotify(accessToken, limit, time_range);
         makeResponse(res, 200, { playlistInfo })
     } catch (error) {
         makeResponse(res, error.statusCode || 500, null, error.message);
@@ -45,6 +45,7 @@ const getUserInfoHandler = async (req, res) => {
 const getUserPlaylistsHandler = async (req, res) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
+
         console.log("Start fetching user playlists");
 
         const userPlaylists = await getUserPlaylists(accessToken);
@@ -54,74 +55,13 @@ const getUserPlaylistsHandler = async (req, res) => {
     }
 };
 
-const getPlaylistHandler = async (req, res) => {
-    try {
-        const accessToken = req.headers.authorization.split(' ')[1];
-        const { playlistId } = req.query;
 
-        console.log("Start fetching playlist_sample.json", playlistId);
-
-        const playlistInfo = await getPlaylist(accessToken, playlistId);
-
-        makeResponse(res, 200, {playlistInfo});
-    } catch (error) {
-        makeResponse(res, error.statusCode || 500, null, error.message);
-    }
-}
-
-
-const createPlaylistHandler = async (req, res) => {
-    try {
-        const accessToken = req.headers.authorization.split(' ')[1];
-        const { userId, playlistName } = req.body;
-        console.log("Start creating playlist_sample.json");
-
-        const newPlaylist = await createPlaylist(accessToken, userId, playlistName);
-
-        makeResponse(res, 201, { newPlaylist })
-    } catch (error) {
-        makeResponse(res, error.statusCode || 500, null, error.message)
-    }
-};
-
-const updatePlaylistDetailsHandler = async (req, res) => {
-    try {
-        const accessToken = req.headers.authorization.split(' ')[1];
-        const { playlistId } = req.params;
-        const details = req.body;
-        console.log("Start updating playlist_sample.json details");
-
-        const updatedPlaylist = await updatePlaylistDetails(accessToken, playlistId, details);
-
-        makeResponse(res, 200, { updatedPlaylist })
-    } catch (error) {
-        makeResponse(res, error.statusCode || 500, null, error.message)
-    }
-};
-
-const deletePlaylistHandler = async (req, res) => {
-    try {
-        const accessToken = req.headers.authorization.split(' ')[1];
-        const { playlistId } = req.params;
-        console.log("Start deleting playlist_sample.json");
-
-        await deletePlaylist(accessToken, playlistId);
-
-        makeResponse(res, 204, null);
-    } catch (error) {
-        makeResponse(res, error.statusCode || 500, null, error.message);
-    }
-};
 
 module.exports = {
     getTopArtistsHandler,
     getTopTracksHandler,
     getUserInfoHandler,
     getUserPlaylistsHandler,
-    createPlaylistHandler,
-    updatePlaylistDetailsHandler,
-    deletePlaylistHandler,
-    getPlaylistHandler
 };
 
 

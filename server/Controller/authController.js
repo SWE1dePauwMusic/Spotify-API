@@ -5,6 +5,7 @@ const {getAuthUrl, getAccessToken, getRefreshAccessToken} = require("../Services
 let accessToken = '';
 let refreshToken = '';
 let expiresIn = 0;
+
 const login = (req, res) => {
     const spotifyOAUTHUrl = getAuthUrl();
     res.redirect(spotifyOAUTHUrl);          //redirect to Spotify authURL
@@ -41,6 +42,7 @@ const getToken = (req, res) => {
     makeResponse(res, 200, {authTokenData});
 };
 
+
 const refreshAccessToken = async (req, res) => {
     try {
         const refreshToken = req.body.refresh_token;
@@ -53,7 +55,6 @@ const refreshAccessToken = async (req, res) => {
         const newAccessToken = data.access_token;
         accessToken = newAccessToken;
         console.log('newAccessToken', newAccessToken)
-        console.log('test');
         makeResponse(res, 200, { access_token: newAccessToken });
     } catch (error) {
         makeResponse(res, error.statusCode || 500, null, error.message);

@@ -1,4 +1,4 @@
-const ArtistInfo = require("./RequestArtistModel");
+const ArtistInfo = require("./ArtistDTO");
 
 class TrackInfo {
     constructor(track) {

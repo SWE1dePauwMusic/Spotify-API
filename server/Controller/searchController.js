@@ -2,7 +2,8 @@
 //search of spotify
 
 
-const {searchSongOnSpotify, recommendSongOnSpotify} = require("../Services/searchService");
+const {recommendSongOnSpotifyService, searchSongOnSpotifyService} = require("../Services/searchService");
+const makeResponse = require("../Utils/response");
 const searchSongHandler = async (req, res) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
@@ -10,7 +11,7 @@ const searchSongHandler = async (req, res) => {
         console.log("Search query: ", searchQuery);
         console.log("Start searching song");
 
-        const searchResult = await searchSongOnSpotify(accessToken, searchQuery);
+        const searchResult = await searchSongOnSpotifyService(accessToken, searchQuery);
 
         console.log(searchResult.body)
         res.status(200).json({ searchResult });
@@ -22,15 +23,26 @@ const searchSongHandler = async (req, res) => {
 const recommendSongHandler = async (req, res) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
-        //const searchQuery = req.query.searchQuery;
-//console.log("Search query: ", searchQuery);
         console.log("Start recommending song");
+        // Construct the search query from the searchParams
+        const transformSearchParams = (searchParams) => {
+            const transformedParams = {};
+            Object.keys(searchParams).forEach(key => {
+                transformedParams[key] = `${searchParams[key]}`;
+            });
 
-        const recommendResult = await recommendSongOnSpotify(accessToken);
+            return transformedParams;
+        };
 
-        res.status(200).json({ recommendResult });
+        const searchQuery = transformSearchParams(req.query);
+
+        // Log the constructed search query
+        console.log("Search query: ", searchQuery);
+
+        const playlistInfo = await recommendSongOnSpotifyService(accessToken, searchQuery);
+        makeResponse(res, 200, { playlistInfo});
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        makeResponse(res, error.statusCode || 500, null, error.message);
     }
 
 }

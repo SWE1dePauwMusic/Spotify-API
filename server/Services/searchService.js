@@ -1,5 +1,6 @@
+const PlaylistInfo = require("../Models/DataTransferObject/PlaylistDTO");
 
-async function searchSongOnSpotify(accessToken, searchQuery) {
+async function searchSongOnSpotifyService(accessToken, searchQuery) {
     const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=track`;
 
     const searchOptions = {
@@ -25,7 +26,7 @@ async function searchSongOnSpotify(accessToken, searchQuery) {
 }
 
 
-async function recommendSongOnSpotify(accessToken) {
+async function recommendSongOnSpotifyService(accessToken, params) {
     const apiURL = `https://api.spotify.com/v1/recommendations`;
     const searchOptions = {
         method: 'GET',
@@ -35,14 +36,16 @@ async function recommendSongOnSpotify(accessToken) {
         },
     };
 
-    const params = {
-        limit: 5,
-        min_tempo: 120,
-        min_popularity: 30,
-        max_popularity: 60,
-        min_instrumentalness: 0.5,
-        seed_genres: 'acoustic,alt-rock,indie',
-    }
+    // const params = {
+    //     limit: 5,
+    //     min_tempo: 120,
+    //     min_popularity: 30,
+    //     max_popularity: 60,
+    //     min_instrumentalness: 0.5,
+    //     seed_genres: 'acoustic,alt-rock,indie',
+    //     seed_artists: '0du5cEVh5yTK9QJze8zA0C',
+    //     seed_tracks: '0c6xIDDpzE81m2q797ordA',
+    // }
 
     try {
         console.log(`${apiURL}?${new URLSearchParams(params)}`)
@@ -53,14 +56,9 @@ async function recommendSongOnSpotify(accessToken) {
             throw new Error(`Error recommending song: ${response.statusText} - ${errorData.error.message}`);
         }
         const result = await response.json();
-        const tracks = result.tracks.map(track => (
-            {
-                name: track.name,
-                popularity: track.popularity,
-                id: track.id,
-                artists: track.artists.map(artist => artist.name),
-            }));
-        console.log(tracks)
+        console.log(result)
+
+        const tracks = new PlaylistInfo(result, `recommend-tracks`)
         return tracks;
     } catch (error) {
         console.error('Error recommending song:', error);
@@ -68,4 +66,4 @@ async function recommendSongOnSpotify(accessToken) {
     }
 }
 
-module.exports = {searchSongOnSpotify, recommendSongOnSpotify}
+module.exports = {searchSongOnSpotifyService, recommendSongOnSpotifyService}

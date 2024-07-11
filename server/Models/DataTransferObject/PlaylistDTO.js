@@ -1,7 +1,7 @@
-const TrackInfo = require("./ResponseTrackModel");
+const TrackInfo = require("./TrackDTO");
 
 class PlaylistInfo {
-    constructor(result,type ) {
+    constructor(result, type ) {
         this.id = result.id ;
         this.images = result.images;
 
@@ -9,13 +9,15 @@ class PlaylistInfo {
             this.name = result.name ;
             this.trackList = result.tracks.items.map(track => new TrackInfo(track.track));
         }
-        else{
+        else if (type === 'top-tracks'){
             this.name = type;
             this.trackList = result.items.map(track => new TrackInfo(track));
         }
-
+        else{
+            this.name = type;
+            this.trackList = result.tracks.map(track => new TrackInfo(track));
+        }
     }
-
 }
 
 module.exports = PlaylistInfo;

@@ -5,7 +5,9 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const {searchSongHandler, recommendSongHandler} = require("./Controller/searchController");
-const {getTopArtistsHandler, getTopTracksHandler, getUserInfoHandler, getUserPlaylistsHandler, getPlaylistHandler} = require("./Controller/userInfoController");
+const {getTopArtistsHandler, getTopTracksHandler, getUserInfoHandler, getUserPlaylistsHandler} = require("./Controller/userInfoController");
+const {getPlaylistHandler} = require("./Controller/trackPlaylistController");
+
 
 dotenv.config();
 
