@@ -18,7 +18,7 @@ const generateRandomString = (length) => {
 };
 
 const getAuthUrl = () => {
-    const scope = "streaming user-read-email user-top-read user-read-private user-read-playback-state user-modify-playback-state";
+    const scope = "streaming user-library-read user-library-modify user-read-email user-top-read user-read-private user-read-playback-state user-modify-playback-state playlist-read-private playlist-modify-private";
     const state = generateRandomString(16);
     const REDIRECT_URI = CLIENT_URL + '/auth/callback';
 

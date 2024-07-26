@@ -13,6 +13,12 @@ class PlaylistInfo {
             this.name = type;
             this.trackList = result.items.map(track => new TrackInfo(track));
         }
+        //
+        else if (type === 'my-fav'){
+            this.name = type;
+            this.trackList = result.items.map(item => new TrackInfo(item.track));
+        }
+
         else{
             this.name = type;
             this.trackList = result.tracks.map(track => new TrackInfo(track));

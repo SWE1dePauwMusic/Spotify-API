@@ -6,13 +6,13 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const {searchSongHandler, recommendSongHandler} = require("./Controller/searchController");
 const {getTopArtistsHandler, getTopTracksHandler, getUserInfoHandler, getUserPlaylistsHandler} = require("./Controller/userInfoController");
-const {getPlaylistHandler} = require("./Controller/trackPlaylistController");
+const {getPlaylistHandler, getMyFavPlaylistHandler, deleteTracksMyFavPlaylistHandler, updateTracksMyFavPlaylistHandler} = require("./Controller/trackPlaylistController");
 
 
 dotenv.config();
 
 const app = express();
-const port = 5000;
+const PORT = 5005;
 
 app.use(cors());
 app.use(express.json()); // for parsing application/json
@@ -37,7 +37,12 @@ app.get('/user-info', getUserInfoHandler);
 app.get('/user-playlists', getUserPlaylistsHandler);
 app.get('/get-playlist', getPlaylistHandler)
 
+//Liked list
+app.get('/my-fav', getMyFavPlaylistHandler)
+app.delete('/my-fav', deleteTracksMyFavPlaylistHandler)
+app.put('/my-fav', updateTracksMyFavPlaylistHandler)
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });

@@ -5,9 +5,9 @@ const makeResponse = require("../Utils/response");
 
 
 const getTopArtistsHandler = async (req, res) => {
+    console.log("Start fetching top artists...");
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
-        console.log("Start fetching top artists");
 
         const topArtists = await getTopArtistsOnSpotify(accessToken);
         makeResponse(res, 200, { topArtists });
@@ -17,11 +17,12 @@ const getTopArtistsHandler = async (req, res) => {
 };
 
 const getTopTracksHandler = async (req, res) => {
+    console.log("Start fetching top tracks...");
+
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
         const limit = req.query.limit;
         const time_range = req.query.time_range;
-        console.log("Start fetching top tracks", limit);
 
         const playlistInfo = await getTopTracksOnSpotify(accessToken, limit, time_range);
         makeResponse(res, 200, { playlistInfo })
@@ -31,9 +32,10 @@ const getTopTracksHandler = async (req, res) => {
 };
 
 const getUserInfoHandler = async (req, res) => {
+    console.log("Start fetching user info...");
+
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
-        console.log("Start fetching user info");
 
         const userInfo = await getUserInfo(accessToken);
         makeResponse(res, 200, { userInfo })
@@ -43,10 +45,9 @@ const getUserInfoHandler = async (req, res) => {
 };
 
 const getUserPlaylistsHandler = async (req, res) => {
+    console.log("Start fetching user playlists...");
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
-
-        console.log("Start fetching user playlists");
 
         const userPlaylists = await getUserPlaylists(accessToken);
         makeResponse(res, 200, { userPlaylists })

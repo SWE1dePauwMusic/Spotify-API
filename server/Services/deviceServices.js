@@ -13,6 +13,7 @@ async function getDevice(accessToken, deviceName) {
 
     try {
         const data = await makeRequest(options);
+        console.log("Device of new ", data.devices)
         if (data && data.devices && data.devices.length > 0) {
             for (let i = 0; i < data.devices.length; i++) {
                 if (data.devices[i].name === deviceName) {

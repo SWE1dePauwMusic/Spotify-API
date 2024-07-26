@@ -7,12 +7,15 @@ let refreshToken = '';
 let expiresIn = 0;
 
 const login = (req, res) => {
+    console.log("OAUTH2 through Spotify")
     const spotifyOAUTHUrl = getAuthUrl();
     res.redirect(spotifyOAUTHUrl);          //redirect to Spotify authURL
 };
 
 const callback = async (req, res) => {
+    console.log("Callback from Minh's app starts ...")
     try {
+
         const code = req.query.code;
 
         if (!code) {
@@ -20,11 +23,12 @@ const callback = async (req, res) => {
         }
 
         const data = await getAccessToken(code);
+        console.log(data)
 
         accessToken = data.access_token;
         refreshToken = data.refresh_token;
         expiresIn = data.expires_in;
-        res.redirect('/')
+        res.redirect('/main')
         // makeResponse(res, 200, { access_token: accessToken });
     } catch (error) {
         makeResponse(res, error.statusCode || 500, null, error.message);
@@ -52,10 +56,14 @@ const refreshAccessToken = async (req, res) => {
         }
 
         const data = await getRefreshAccessToken(refreshToken);
-        const newAccessToken = data.access_token;
-        accessToken = newAccessToken;
-        console.log('newAccessToken', newAccessToken)
-        makeResponse(res, 200, { access_token: newAccessToken });
+
+        const authTokenData = {
+            access_token :data.access_token,
+            expiresIn: data.expires_in,
+        };
+        accessToken = authTokenData.access_token;
+        console.log('newAccessToken', authTokenData)
+        makeResponse(res, 200, {authTokenData});
     } catch (error) {
         makeResponse(res, error.statusCode || 500, null, error.message);
     }

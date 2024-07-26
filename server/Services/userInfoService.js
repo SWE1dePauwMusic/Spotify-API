@@ -1,8 +1,8 @@
 const makeRequest = require("../Utils/request");
 const PlaylistInfo = require("../Models/DataTransferObject/PlaylistDTO");
 const ArtistInfo = require("../Models/DataTransferObject/ArtistDTO");
-const SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1';
 
+const SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1';
 const getTopArtistsOnSpotify = async (accessToken) => {
     const params = {
         limit: 10,
@@ -90,9 +90,12 @@ const getUserPlaylists = async (accessToken) => {
         const playlists = items.map(playlist => ({
             name: playlist.name,
             id: playlist.id,
-            images: playlist.images,
-            trackNumber: playlist.tracks.total,
+            images: playlist.images[0],
             links: playlist.tracks.href,
+            owner: {
+                name: playlist.owner.display_name,
+                id: playlist.owner.id
+            }
         }));
         console.log(playlistsData)
         return playlists;
