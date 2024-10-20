@@ -1,2 +1,6 @@
-open backend: go to server folder -> node index.js
-open frontend: npm start
+# Music app
+## Backend repository of the music app, including API endpoints for each features.
+
+## Get started:
+npm install
+npm start
