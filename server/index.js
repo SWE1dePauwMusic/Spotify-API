@@ -6,7 +6,10 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const {searchSongHandler, recommendSongHandler} = require("./Controller/searchController");
 const {getTopArtistsHandler, getTopTracksHandler, getUserInfoHandler, getUserPlaylistsHandler} = require("./Controller/userInfoController");
-const {getPlaylistHandler, getMyFavPlaylistHandler, deleteTracksMyFavPlaylistHandler, updateTracksMyFavPlaylistHandler} = require("./Controller/trackPlaylistController");
+const {getPlaylistHandler, getMyFavPlaylistHandler, deleteTracksMyFavPlaylistHandler, updateTracksMyFavPlaylistHandler,
+    getPlaylistAudioFeaturesHandler
+} = require("./Controller/PlaylistController");
+const {getArtistWithIdHandler} = require("./Controller/ArtistTrackController");
 
 
 dotenv.config();
@@ -42,6 +45,13 @@ app.get('/my-fav', getMyFavPlaylistHandler)
 app.delete('/my-fav', deleteTracksMyFavPlaylistHandler)
 app.put('/my-fav', updateTracksMyFavPlaylistHandler)
 
+//artist
+app.get('/artist', getArtistWithIdHandler)
+
+//Track
+// app.get('/track', getTrack)
+
+app.get('/playlist-audio-features', getPlaylistAudioFeaturesHandler)
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

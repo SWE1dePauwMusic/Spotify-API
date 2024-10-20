@@ -3,7 +3,7 @@ const PlaylistInfo = require("../Models/DataTransferObject/PlaylistDTO");
 
 const SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1';
 
-const getPlaylist = async (accessToken, playlistId) => {
+const getPlaylistWithIdService = async (accessToken, playlistId) => {
     const options = {
         method: 'GET',
         url: `${SPOTIFY_API_BASE_URL}/playlists/${playlistId}`,
@@ -13,7 +13,8 @@ const getPlaylist = async (accessToken, playlistId) => {
     };
     try {
         const result = await makeRequest(options)
-        const playlistInfo = new PlaylistInfo(result, 'id')
+        // console.log(result)
+        const playlistInfo = new PlaylistInfo(result, true)
         return playlistInfo
     } catch (error) {
         console.error('Error fetching playlist_sample.json with Id:', error);
@@ -38,7 +39,7 @@ const createPlaylist = async (accessToken, userId, playlistName) => {
 };
 
 
-const updatePlaylist = async (accessToken, playlistId, details) => {
+const updatePlaylistWithIdService = async (accessToken, playlistId, details) => {
     const options = {
         method: 'PUT',
         url: `${SPOTIFY_API_BASE_URL}/playlists/${playlistId}`,
@@ -52,7 +53,7 @@ const updatePlaylist = async (accessToken, playlistId, details) => {
 };
 
 
-const deletePlaylist = async (accessToken, playlistId) => {
+const deletePlaylistWithIdService = async (accessToken, playlistId) => {
     const options = {
         method: 'DELETE',
         url: `${SPOTIFY_API_BASE_URL}/playlists/${playlistId}/followers`,
@@ -63,6 +64,9 @@ const deletePlaylist = async (accessToken, playlistId) => {
 
     return makeRequest(options);
 };
+
+//-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
 
 const getMyFavPlaylist = async (accessToken) => {
     const options = {
@@ -122,16 +126,55 @@ const deleteMyFavPlaylist = async (accessToken, details) => {
     }
 }
 
+const getAudioFeatures = async (accessToken, trackId) => {
+    const options = {
+        method: 'GET',
+        url: `${SPOTIFY_API_BASE_URL}/audio-analysis/${trackId}`,
+        headers: {
+            "Authorization": `Bearer ${accessToken}`
+        }
+    }
+    try {
+        const result = await makeRequest(options)
+        return result
+    } catch (error) {
+        console.error('Error fetching audio features', error);
+        throw error;
+    }
+}
+
+const getPlaylistAudioFeatures = async (accessToken, playlistId) => {
+    //task 1: Get playlist
+    //loop through each song and get the audio Analysis of each song
+    //return the audio features of the playlist
+
+    const playlist = await getPlaylistWithIdService(accessToken, playlistId);
+    const tracks = playlist.trackList;
+    const audioFeatures = [];
+    for (let i = 0; i < tracks.length; i++) {
+        const track = tracks[i];
+        const trackId = track.spotifyId;
+        const audioFeature = await getAudioFeatures(accessToken, trackId);
+        audioFeatures.push(audioFeature);
+    }
+    const lengthLs = audioFeatures.length;
+    return {lengthLs, audioFeatures};
+}
+
 
 
 
 
 module.exports = {
-    getPlaylist,
+    getPlaylistWithIdService,
     createPlaylist,
-    updatePlaylist,
-    deletePlaylist,
+    updatePlaylistWithIdService,
+    deletePlaylistWithIdService,
+
+
     getMyFavPlaylist,
     updateMyFavPlaylist,
-    deleteMyFavPlaylist
+    deleteMyFavPlaylist,
+
+    getPlaylistAudioFeatures,
 }

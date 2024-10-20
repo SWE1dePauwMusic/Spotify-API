@@ -2,10 +2,11 @@
 
 class ArtistInfo {
     constructor(artist) {
+        this.spotifyId = artist.id;
         this.name = artist.name;
         this.popularity = artist.popularity;
-        this.id = artist.id;
         this.genres = artist.genres;
+        this.image = artist?.images?.[0] ;
     }
 }
 

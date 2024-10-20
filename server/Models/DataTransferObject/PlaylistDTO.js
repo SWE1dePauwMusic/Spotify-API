@@ -1,29 +1,25 @@
-const TrackInfo = require("./TrackDTO");
+const {TrackInfo} = require("./TrackDTO");
+const ArtistInfo = require("./ArtistDTO");
+const UserInfo = require("./UserDTO");
+
+
 
 class PlaylistInfo {
-    constructor(result, type ) {
-        this.id = result.id ;
-        this.images = result.images;
+    constructor(result, withTrack) {
+        this.spotifyId = result.id;            //spotifyId
+        this.image = result.images[0];
+        this.name = result.name;
+        this.description = result.description;
 
-        if (type === 'id'){
-            this.name = result.name ;
+        this.owner = new UserInfo(result.owner.display_name, result.owner.id);
+
+        if (withTrack){
             this.trackList = result.tracks.items.map(track => new TrackInfo(track.track));
-        }
-        else if (type === 'top-tracks'){
-            this.name = type;
-            this.trackList = result.items.map(track => new TrackInfo(track));
-        }
-        //
-        else if (type === 'my-fav'){
-            this.name = type;
-            this.trackList = result.items.map(item => new TrackInfo(item.track));
-        }
-
-        else{
-            this.name = type;
-            this.trackList = result.tracks.map(track => new TrackInfo(track));
         }
     }
 }
+
+
+
 
 module.exports = PlaylistInfo;

@@ -1,22 +1,25 @@
-
-//search of spotify
-
-
 const {recommendSongOnSpotifyService, searchSongOnSpotifyService} = require("../Services/searchService");
 const makeResponse = require("../Utils/response");
+
+
 const searchSongHandler = async (req, res) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
-        const searchQuery = req.query.searchQuery;
+        const searchQuery = {
+            "q": req.query.q,
+            "type": req.query.type || "track",
+            "limit": req.query.limit || 5,
+        };
+
         console.log("Search query: ", searchQuery);
         console.log("Start searching song");
 
-        const searchResult = await searchSongOnSpotifyService(accessToken, searchQuery);
+        const playlistInfo = await searchSongOnSpotifyService(accessToken, searchQuery);
 
-        console.log(searchResult.body)
-        res.status(200).json({ searchResult });
+        console.log(playlistInfo.body)
+        makeResponse(res, 200, { playlistInfo })
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        makeResponse(res, error.statusCode || 500, null, error.message);
     }
 };
 

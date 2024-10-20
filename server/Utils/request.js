@@ -4,14 +4,14 @@ const CustomError = require("./errorHandling");
 // const CustomError = require('./CustomError'); // Adjust the path to where your CustomError module is located
 
 async function makeRequest(options) {
-    const { method, url, headers, data } = options;
-
+    const { method, url, headers, data, params } = options;
     try {
         const response = await axios({
             method,
             url,
             headers,
-            data
+            data,
+            params,
         });
 
         return response.data;

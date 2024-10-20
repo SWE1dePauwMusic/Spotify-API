@@ -1,6 +1,8 @@
 const makeRequest = require("../Utils/request");
 const PlaylistInfo = require("../Models/DataTransferObject/PlaylistDTO");
 const ArtistInfo = require("../Models/DataTransferObject/ArtistDTO");
+const {ListTracks} = require("../Models/DataTransferObject/TrackDTO");
+const UserInfo = require("../Models/DataTransferObject/UserDTO");
 
 const SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1';
 const getTopArtistsOnSpotify = async (accessToken) => {
@@ -20,8 +22,9 @@ const getTopArtistsOnSpotify = async (accessToken) => {
 
     try {
         const result = await makeRequest(options);
+        console.log(result)
         // Get only the name, popularity, id, and genres of the artist
-        const artists = new ArtistInfo(result)
+        const artists = result.items.map(artist => new ArtistInfo(artist));
         return artists;
     } catch (error) {
         console.error('Error fetching top artists:', error);
@@ -47,7 +50,7 @@ const getTopTracksOnSpotify = async (accessToken, limit, time_range) => {
         const result = await makeRequest(options);
         console.log(result)
         // Get only the name, popularity, id, and artists of the track
-        const tracks = new PlaylistInfo(result, 'top-tracks')
+        const tracks = new ListTracks(result, 'top-tracks')
         return tracks;
     } catch (error) {
         console.error('Error fetching top tracks:', error);
@@ -68,7 +71,8 @@ const getUserInfo = async (accessToken) => {
     try {
         const userInfo = await makeRequest(options);
         const { display_name, email, id } = userInfo;
-        return { displayName: display_name, email:email, id:id};
+        const user = new UserInfo(display_name, id)
+        return user;
     } catch (error) {
         console.error('Error fetching user info:', error);
         throw error;
@@ -86,19 +90,12 @@ const getUserPlaylists = async (accessToken) => {
 
     try {
         const playlistsData = await makeRequest(options);
-        const { items } = playlistsData;
-        const playlists = items.map(playlist => ({
-            name: playlist.name,
-            id: playlist.id,
-            images: playlist.images[0],
-            links: playlist.tracks.href,
-            owner: {
-                name: playlist.owner.display_name,
-                id: playlist.owner.id
-            }
-        }));
-        console.log(playlistsData)
-        return playlists;
+
+        listPlaylists = playlistsData.items.map(playlist => new PlaylistInfo(playlist, false));
+        console.log(listPlaylists)
+        return listPlaylists;
+
+
     } catch (error) {
         console.error('Error fetching user playlists:', error);
         throw error;

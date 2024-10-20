@@ -1,5 +1,4 @@
-const {getTopArtistsOnSpotify, getTopTracksOnSpotify, getUserInfo, getUserPlaylists, getPlaylist, deletePlaylist,
-    createPlaylist, updatePlaylistDetails
+const {getTopArtistsOnSpotify, getTopTracksOnSpotify, getUserInfo, getUserPlaylists,
 } = require("../Services/userInfoService");
 const makeResponse = require("../Utils/response");
 

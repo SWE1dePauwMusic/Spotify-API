@@ -1,16 +1,17 @@
-const {getPlaylist, createPlaylist, updatePlaylistDetails, deletePlaylist, getMyFavPlaylist, updateMyFavPlaylist,
-    deleteMyFavPlaylist
-} = require("../Services/trackPlaylistService");
+const {createPlaylist, getMyFavPlaylist, updateMyFavPlaylist,
+    deleteMyFavPlaylist, deletePlaylistWithIdService, getPlaylistWithIdService, updatePlaylistWithIdService,
+    getPlaylistAudioFeatures
+} = require("../Services/PlaylistService");
 const makeResponse = require("../Utils/response");
 
 
-const getPlaylistHandler = async (req, res) => {
+const getPlaylistWithIdHandler = async (req, res) => {
     console.log("Start get Playlist by Id....")
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
         const { playlistId } = req.query;
 
-        const playlistInfo = await getPlaylist(accessToken, playlistId);
+        const playlistInfo = await getPlaylistWithIdService(accessToken, playlistId);
 
         makeResponse(res, 200, {playlistInfo});
     } catch (error) {
@@ -39,7 +40,7 @@ const updatePlaylistDetailsHandler = async (req, res) => {
         const { playlistId } = req.params;
         const details = req.body;
 
-        const updatedPlaylist = await updatePlaylistDetails(accessToken, playlistId, details);
+        const updatedPlaylist = await updatePlaylistWithIdService(accessToken, playlistId, details);
 
         makeResponse(res, 200, { updatedPlaylist })
     } catch (error) {
@@ -53,7 +54,7 @@ const deletePlaylistHandler = async (req, res) => {
         const accessToken = req.headers.authorization.split(' ')[1];
         const { playlistId } = req.params;
 
-        await deletePlaylist(accessToken, playlistId);
+        await deletePlaylistWithIdService(accessToken, playlistId);
 
         makeResponse(res, 204, null);
     } catch (error) {
@@ -104,13 +105,29 @@ const deleteTracksMyFavPlaylistHandler = async (req, res) => {
     }
 }
 
+const getPlaylistAudioFeaturesHandler = async (req, res) => {
+    console.log("Start getting playlist audio features...")
+    try {
+        const accessToken = req.headers.authorization.split(' ')[1];
+        const { playlistId } = req.query;
+
+        const playlistAudioFeatures = await getPlaylistAudioFeatures(accessToken, playlistId);
+
+        makeResponse(res, 200, {playlistAudioFeatures});
+    } catch (error) {
+        makeResponse(res, error.statusCode || 500, null, error.message);
+    }
+
+}
+
 
 module.exports = {
     createPlaylistHandler,
     updatePlaylistDetailsHandler,
     deletePlaylistHandler,
-    getPlaylistHandler,
+    getPlaylistHandler: getPlaylistWithIdHandler,
     getMyFavPlaylistHandler,
     updateTracksMyFavPlaylistHandler,
     deleteTracksMyFavPlaylistHandler,
+    getPlaylistAudioFeaturesHandler
 }
